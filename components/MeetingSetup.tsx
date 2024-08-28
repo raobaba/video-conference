@@ -7,6 +7,7 @@ import {
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
 
+import Alert from "./Alert";
 import { Button } from "./ui/button";
 
 const MeetingSetup = ({
@@ -30,6 +31,7 @@ const MeetingSetup = ({
     );
   }
 
+  // https://getstream.io/video/docs/react/ui-cookbook/replacing-call-controls/
   const [isMicCamToggled, setIsMicCamToggled] = useState(false);
 
   useEffect(() => {
@@ -41,6 +43,21 @@ const MeetingSetup = ({
       call.microphone.enable();
     }
   }, [isMicCamToggled, call.camera, call.microphone]);
+
+  if (callTimeNotArrived)
+    return (
+      <Alert
+        title={`Your Meeting has not started yet. It is scheduled for ${callStartsAt.toLocaleString()}`}
+      />
+    );
+
+  if (callHasEnded)
+    return (
+      <Alert
+        title="The call has been ended by the host"
+        iconUrl="/icons/call-ended.svg"
+      />
+    );
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center gap-3 text-white">
